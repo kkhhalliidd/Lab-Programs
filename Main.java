@@ -1,83 +1,77 @@
 import java.util.Scanner;
 
+class WrongAge extends Exception {
+    public WrongAge() {
+        super("Age Error");
+    }
+
+    public WrongAge(String message) {
+        super(message);
+    }
+}
+
+class InputScanner {
+    Scanner s = new Scanner(System.in);
+    
+    public int getInput() {
+        return s.nextInt();
+    }
+}
+
+
+class Father extends InputScanner {
+    protected int fatherAge;
+
+
+    public Father() throws WrongAge {
+        System.out.print("Enter father's age: ");
+        fatherAge = getInput(); // Read father's age
+        if (fatherAge < 0) {
+            throw new WrongAge("Age cannot be negative");
+        }
+    }
+
+
+    public void displayFatherAge() {
+        System.out.println("Father's age: " + fatherAge);
+    }
+}
+
+
+class Son extends Father {
+    private int sonAge;
+
+
+    public Son() throws WrongAge {
+        super(); // Call Father's constructor
+        System.out.print("Enter son's age: ");
+        sonAge = getInput(); // Read son's age
+
+        if (sonAge >= fatherAge) {
+            throw new WrongAge("Son's age cannot be greater than or equal to father's age");
+        } else if (sonAge < 0) {
+            throw new WrongAge("Age cannot be negative");
+        }
+    }
+
+
+    public void displaySonAge() {
+        System.out.println("Son's age: " + sonAge);
+    }
+}
 
 public class Main {
     public static void main(String[] args) {
-	class Subject {
-    int subjectMarks, credits, grade;
+        try {
 
-    void calculateGrade() {
-        if (subjectMarks < 40) {
-            grade = 0;
-        } else {
-            grade = subjectMarks / 10 + 1;
+            Son son = new Son();
+            son.displayFatherAge(); // Display father's age
+            son.displaySonAge();    // Display son's age
+        } catch (WrongAge e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
 }
 
-class Student {
-    String name;
-    String usn;
-    double SGPA;
-    Subject subject[];
-    Scanner s;
 
-    Student() {
-        subject = new Subject[8];
-        for (int i = 0; i < 8; i++) {
-            subject[i] = new Subject();
-        }
-        s = new Scanner(System.in);
-    }
-
-    void getStudentDetails() {
-        System.out.print("Enter student name: ");
-        name = s.nextLine();
-        System.out.print("Enter USN: ");
-        usn = s.nextLine();
-    }
-
-    void getMarks() {
-        for (int i = 0; i < 8; i++) {
-            System.out.println("Enter marks for Subject " + (i + 1) + ": ");
-            subject[i].subjectMarks = s.nextInt();
-            System.out.println("Enter credits for Subject " + (i + 1) + ": ");
-            subject[i].credits = s.nextInt();
-
-            subject[i].calculateGrade();
-            if (subject[i].subjectMarks > 100) {
-                System.out.println("Marks should not exceed 100");
-            }
-        }
-    }
-
-    void computeSGPA() {
-        int totalCredits = 0, totalPoints = 0;
-
-        for (int i = 0; i < 8; i++) {
-            totalCredits += subject[i].credits;
-            totalPoints += subject[i].grade*subject[i].credits;
-        }
-
-        SGPA = (double)totalPoints/totalCredits;
-    }
-
-    void displayResult() {
-        System.out.println("Student Name: " + name);
-        System.out.println("USN: " + usn);
-        System.out.println("SGPA: " + SGPA);
-    }
-}
-
-        Student s1 = new Student();
-        s1.getStudentDetails();
-        s1.getMarks();
-        s1.computeSGPA();
-        s1.displayResult();
-
-	System.out.println("KHALID RABBANI" )  ; 
-	System.out.print("1BM23CS150") ; 
-    }
-}
-
-
+              
